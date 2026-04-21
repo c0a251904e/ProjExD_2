@@ -2,6 +2,7 @@ import os
 import sys
 import random
 import pygame as pg
+import time
 
 
 WIDTH, HEIGHT = 1100, 650
@@ -26,6 +27,27 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
+def gameover(screen: pg.Surface) -> None:
+    black_bg = pg.Surface((WIDTH, HEIGHT))
+    pg.draw.rect(black_bg, (0, 0, 0), (0, 0, WIDTH, HEIGHT))
+
+    black_bg.set_alpha(150)
+
+    font = pg.font.Font(None, 80)
+    txt = font.render("Game Over", True, (255, 255, 255))
+    txt_rct = txt.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+ 
+    kk_img = pg.image.load("fig/8.png") 
+
+    screen.blit(black_bg, (0, 0))
+    screen.blit(txt, txt_rct) 
+    screen.blit(kk_img, (txt_rct.left - 60, txt_rct.centery - 25))
+    screen.blit(kk_img, (txt_rct.right + 20, txt_rct.centery - 25))
+
+    pg.display.update()
+    time.sleep(5)
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -49,7 +71,7 @@ def main():
                 return
         
         if kk_rct.colliderect(bb_rct):  # こうかとんと爆弾の衝突判定
-            print("ゲームオーバー")
+            gameover(screen)  # ゲームオーバー画面を表示する
             return  # ゲームオーバーの意味でmain関数から出る
         screen.blit(bg_img, [0, 0]) 
 
@@ -89,3 +111,6 @@ if __name__ == "__main__":
     main()
     pg.quit()
     sys.exit()
+
+
+
