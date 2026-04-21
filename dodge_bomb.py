@@ -47,12 +47,30 @@ def gameover(screen: pg.Surface) -> None:
     pg.display.update()
     time.sleep(5)
 
+def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    """移動方向ごとのこうかとん画像"""
+    base = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
+
+    return {
+        (0, 0): base,
+        (5, 0): pg.transform.rotozoom(base, -90, 1.0),
+        (-5, 0): pg.transform.rotozoom(base, 90, 1.0),
+        (0, -5): pg.transform.rotozoom(base, 0, 1.0),
+        (0, 5): pg.transform.rotozoom(base, 180, 1.0),
+        (5, -5): pg.transform.rotozoom(base, -45, 1.0),
+        (5, 5): pg.transform.rotozoom(base, -135, 1.0),
+        (-5, -5): pg.transform.rotozoom(base, 45, 1.0),
+        (-5, 5): pg.transform.rotozoom(base, 135, 1.0),
+    }
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")    
-    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
+    
+    kk_imgs = get_kk_imgs() #こうかとん画像切り替え
+    kk_img = kk_imgs[(0,0)]
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
 
@@ -95,6 +113,7 @@ def main():
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx, vy)  # 爆弾を移動させる
+        kk_img = kk_imgs.get(tuple(sum_mv), kk_imgs[(0, 0)])
         screen.blit(bb_img, bb_rct)  # 爆弾を表示させる
         yoko, tate = check_bound(bb_rct)
         if not yoko:  # 横方向の判定
