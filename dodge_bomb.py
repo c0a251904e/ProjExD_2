@@ -31,7 +31,7 @@ def gameover(screen: pg.Surface) -> None:
     black_bg = pg.Surface((WIDTH, HEIGHT))
     pg.draw.rect(black_bg, (0, 0, 0), (0, 0, WIDTH, HEIGHT))
 
-    black_bg.set_alpha(150)
+    black_bg.set_alpha(150) #半透明にした　
 
     font = pg.font.Font(None, 80)
     txt = font.render("Game Over", True, (255, 255, 255))
